@@ -1,8 +1,9 @@
-require('dotenv').config();
-const { token } = process.DISCORD_TOKEN;
-const { Client, Collection, GatewayIntentBits } = require('discord.js')
-const fs = require('fs')
+import { config } from 'dotenv';
+import { Client} from "discord.js";
 
-const client = Client({ intents: GatewayIntentBits.Guilds })
-client.commands = new Collection();
+config();
 
+const client = new Client({ intents: ['Guilds', 'GuildMessages'] });
+const TOKEN = process.env.DISCORD_TOKEN
+
+client.login(TOKEN);

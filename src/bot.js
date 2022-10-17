@@ -24,6 +24,14 @@ const rest = new REST({ version: "10" }).setToken(TOKEN);
 // listen to an event
 client.on("ready", () => console.log(`${client.user.tag} has logged in.`));
 
+// interaction event
+client.on('interactionCreate', (interaction) => {
+  if(interaction.isChatInputCommand()) {
+    console.log('Hello world')
+    interaction.reply({ content: 'Hola papi!' })
+  }
+})
+
 // // handle message event
 // client.on("messageCreate", (message) => {
 //   console.log(message.content);
@@ -41,12 +49,8 @@ client.on("ready", () => console.log(`${client.user.tag} has logged in.`));
 async function main() {
   const commands = [
     {
-      name: "tutorialhelp",
-      description: "Help Tutorial Command",
-    },
-    {
-      name: "tutorialhelp2",
-      description: "Help Tutorial Command2",
+      name: "order",
+      description: "Order something...",
     },
   ];
 

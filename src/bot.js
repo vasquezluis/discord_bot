@@ -25,37 +25,92 @@ const rest = new REST({ version: "10" }).setToken(TOKEN);
 client.on("ready", () => console.log(`${client.user.tag} has logged in.`));
 
 // interaction event
-client.on('interactionCreate', (interaction) => {
-  if(interaction.isChatInputCommand()) {
-    console.log('Hello world')
-    interaction.reply({ content: 'Hola papi!' })
+client.on("interactionCreate", (interaction) => {
+  if (interaction.isChatInputCommand()) {
+    const { commandName } = interaction;
+
+    if (commandName == "order") {
+      console.log("Alguien escribio /order");
+      // obtener el valor de las opciones
+      const foodSelected = interaction.options.get("food");
+      const drinkSelected = interaction.options.get("drink");
+      console.log(`${foodSelected.name}: ${foodSelected.value}`);
+      console.log(`${drinkSelected.name}: ${drinkSelected.value}`);
+      interaction.reply({
+        content: `Has ordenado ${foodSelected.value} y ${drinkSelected.value}`,
+      });
+    } else if (commandName == "meme") {
+      console.log("Alguien escribio /meme");
+      interaction.reply({ content: "Proximamente meme aqui!" });
+    } else if (commandName == "motivation") {
+      console.log("Alguien escribio /motivation");
+      interaction.reply({ content: "Proximamente motivation aqui!" });
+    }
+  } else {
+    return;
   }
-})
-
-// // handle message event
-// client.on("messageCreate", (message) => {
-//   console.log(message.content);
-//   console.log(message.createdAt.toDateString());
-//   console.log(message.author.tag);
-// });
-
-// // handle a create channel event
-// client.on("channelCreate", (channel) => {
-//   console.log(channel.name);
-//   console.log(channel.createdAt);
-//   console.log(channel.id);
-// })
+});
 
 async function main() {
+  // register a slash command
   const commands = [
     {
       name: "order",
       description: "Order something...",
+      options: [
+        {
+          name: "food",
+          description: "the type of food",
+          type: 3,
+          required: true,
+          choices: [
+            {
+              name: "Cake",
+              value: "cake",
+            },
+            {
+              name: "Hamburger",
+              value: "hamburger",
+            },
+            {
+              name: "Pizza",
+              value: "pizza",
+            },
+          ],
+        },
+        {
+          name: "drink",
+          description: "the type of drink",
+          type: 3,
+          required: true,
+          choices: [
+            {
+              name: "Coca-cola",
+              value: "coca-cola",
+            },
+            {
+              name: "Pepsi",
+              value: "pepsi",
+            },
+            {
+              name: "Tea",
+              value: "tea",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "meme",
+      description: "Shows a random meme...",
+    },
+    {
+      name: "motivation",
+      description: "Shows a motivation phrase...",
     },
   ];
 
   try {
-    // register a slash command
     console.log("Started refreshing application (/) commands.");
     // Routes.applicationGuildCommand()
 
@@ -72,3 +127,18 @@ async function main() {
 }
 
 main();
+
+// handle message event
+/* client.on("messageCreate", (message) => {
+  console.log(message.content);
+  console.log(message.createdAt.toDateString());
+  console.log(message.author.tag);
+  message.reply({ content: "No escribas eso papi!" });
+}); */
+
+// // handle a create channel event
+// client.on("channelCreate", (channel) => {
+//   console.log(channel.name);
+//   console.log(channel.createdAt);
+//   console.log(channel.id);
+// })

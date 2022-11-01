@@ -2,6 +2,11 @@ import { config } from "dotenv";
 import { Client, GatewayIntentBits, Routes } from "discord.js";
 import { REST } from "@discordjs/rest";
 
+// import commands
+import { orderCommand } from "./commands/order.js";
+import { memeCommand } from "./commands/meme.js";
+import { motivationCommand } from "./commands/motivation.js";
+
 config();
 
 // obtener el variables de entorno
@@ -28,22 +33,29 @@ client.on("ready", () => console.log(`${client.user.tag} has logged in.`));
 client.on("interactionCreate", (interaction) => {
   if (interaction.isChatInputCommand()) {
     const { commandName } = interaction;
+    const user = interaction.user;
 
     if (commandName == "order") {
-      console.log("Alguien escribio /order");
+      console.log(
+        `new order request by ${user.username}#${user.discriminator}`
+      );
+
       // obtener el valor de las opciones
       const foodSelected = interaction.options.get("food");
       const drinkSelected = interaction.options.get("drink");
       console.log(`${foodSelected.name}: ${foodSelected.value}`);
       console.log(`${drinkSelected.name}: ${drinkSelected.value}`);
+
       interaction.reply({
         content: `Has ordenado ${foodSelected.value} y ${drinkSelected.value}`,
       });
     } else if (commandName == "meme") {
-      console.log("Alguien escribio /meme");
+      console.log(`new meme request by ${user.username}#${user.discriminator}`);
       interaction.reply({ content: "Proximamente meme aqui!" });
     } else if (commandName == "motivation") {
-      console.log("Alguien escribio /motivation");
+      console.log(
+        `new motivation request by ${user.username}#${user.discriminator}`
+      );
       interaction.reply({ content: "Proximamente motivation aqui!" });
     }
   } else {
@@ -52,62 +64,11 @@ client.on("interactionCreate", (interaction) => {
 });
 
 async function main() {
-  // register a slash command
+  // slash command
   const commands = [
-    {
-      name: "order",
-      description: "Order something...",
-      options: [
-        {
-          name: "food",
-          description: "the type of food",
-          type: 3,
-          required: true,
-          choices: [
-            {
-              name: "Cake",
-              value: "cake",
-            },
-            {
-              name: "Hamburger",
-              value: "hamburger",
-            },
-            {
-              name: "Pizza",
-              value: "pizza",
-            },
-          ],
-        },
-        {
-          name: "drink",
-          description: "the type of drink",
-          type: 3,
-          required: true,
-          choices: [
-            {
-              name: "Coca-cola",
-              value: "coca-cola",
-            },
-            {
-              name: "Pepsi",
-              value: "pepsi",
-            },
-            {
-              name: "Tea",
-              value: "tea",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: "meme",
-      description: "Shows a random meme...",
-    },
-    {
-      name: "motivation",
-      description: "Shows a motivation phrase...",
-    },
+    orderCommand.toJSON(),
+    memeCommand.toJSON(),
+    motivationCommand,
   ];
 
   try {
